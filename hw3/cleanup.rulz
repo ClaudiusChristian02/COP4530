@@ -1,0 +1,21 @@
+Wordify rules
+-------------
+
+leading characters:
+  skip ch until one of the following is true:
+   ch is the null character
+   ch is a letter
+   ch is a digit
+   ch is backslash ('\')
+   ch is hyphen ('-') AND the following character is a digit
+
+acceptance: after skipping leading junk,
+  keep the char ch if any of these are true:
+   ch is a letter or a digit
+   ch is backslash  and next char is a letter or digit
+   ch is apostrophe and next char is a letter or digit
+   ch is dash       and next char is a letter or digit
+   ch is period     and next char is a letter or digit
+   ch is comma      and is surrounded by digits
+   ch is colon      and is surrounded by digits
+   ch is the first or second of a pair of colons, the pair surrounded by letters or digits

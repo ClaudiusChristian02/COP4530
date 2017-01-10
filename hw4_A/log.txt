@@ -1,0 +1,6 @@
+first I found notes that included the functions. I modified the functions, added fsu::OAA to wordsmith2.h
+and the header file. i had many other compile erros such as line 83 in wordsmith2.cpp with the iterator.
+other things I did is make wordset an oaa and increase the value by 1. I created a class print frequency.
+I also created friend classes. None of this worked. I had segmentation faults. I went back in and reverted
+all the changes. Therefore I went back to the course notes and put in the original code and made some minor 
+changes.

@@ -1,0 +1,314 @@
+/*
+    iputil.cpp
+    <date>  
+    <Claudius Christian>     
+
+    <file doc>
+
+
+*/
+
+#include <fstream>
+#include <iomanip>
+#include <cstring>
+#include <iputil.h>
+
+std::ostream& operator << (std::ostream& os, ipClass ipC)
+{
+  switch(ipC)
+  {
+    case classA:
+      os.put('A'); break;
+    case classB:
+      os.put('B'); break;
+    case classC:
+      os.put('C'); break;
+    case badClass:
+      os.put('D'); break;
+  }
+  return os;
+}
+
+ipClass ipInterpret (const ipNumber& address, ipNumber& netID, ipNumber& hostID)
+// returns ipClass and sets netID and hostID of address
+//           (bits numberd left to right beginning with 0)
+//           begin      netID bits   hostID bits   (left to right)
+//           -----      ----------   -----------
+// classA:   0...       1..7         8..31
+// classB:   10...      2..15        16..31
+// classC:   110...     3..23        24..31
+// badClass: all other
+//
+{
+  // TBS
+	// extract the left most bit to see if it is 0 which is a class A network
+	if ((address& 0x80000000) == 0){
+
+		// extract the correct net and host part for a class A network address
+		netID = address& 0x7f000000;
+		hostID = address& 0x00ffffff;
+
+		return classA;
+
+	}
+
+	// extract the left most bit to see if it is 0 which is a class B network
+	if ((address & 0xc0000000) == 0x80000000){
+
+		// extract the correct net and host part for a class B network address
+		netID = address & 0x3fff0000;
+		hostID = address& 0x0000ffff;
+
+		return classB;
+
+	}
+
+	// extract the left most bit to see if it is 0 which is a class C network
+	if ((address& 0xe0000000) == 0xc0000000){
+
+		// extract the correct net and host part for a class C network address
+		netID = address & 0x1fffff00;
+		hostID = address & 0x000000ff;
+
+		return classC;
+
+	}
+
+	return badClass;
+
+} // end ipInterpret()
+
+ipString ipN2ipS (ipNumber ipn)
+// ipNumber to ipString (dot notation)
+{
+  uint32_t byte1, byte2, byte3, byte4;
+  ipNumber byteMask = 0x000000FF;
+  byte4 = ipn & byteMask;
+  ipn = (ipn >> 8);
+  byte3 = ipn & byteMask;
+  ipn = (ipn >> 8);
+  byte2 = ipn & byteMask;
+  ipn = (ipn >> 8);
+  byte1 = ipn & byteMask;
+  char * str1, * str2, * str3, * str4, * ipstr;
+  str1 = int2str(byte1);
+  str2 = int2str(byte2);
+  str3 = int2str(byte3);
+  str4 = int2str(byte4);
+  size_t i, j, j1, j2, j3, j4;
+  j1 = strlen(str1);
+  j2 = strlen(str2);
+  j3 = strlen(str3);
+  j4 = strlen(str4);
+  j = 3 + j1 + j2 + j3 + j4; 
+  ipstr = new char [j + 1];
+  for (i = 0; i < j1; ++i)
+    ipstr[i] = str1[i];
+  ipstr[j1] = '.';
+  for (i = 0; i < j2; ++i)
+    ipstr[j1 + 1 +i] = str2[i];
+  ipstr[j1 + j2 + 1] = '.';
+  for (i = 0; i < j3; ++i)
+    ipstr[j1 + j2 + 2 + i] = str3[i];
+  ipstr[j1 + j2 + j3 + 2] = '.';
+  for (i = 0; i < j4; ++i)
+    ipstr[j1 + j2 + j3 + 3 + i] = str4[i];
+  ipstr[j1 + j2 + j3 +j4 + 3] = '\0';
+  fsu::String S(ipstr);
+  delete str1;
+  delete str2;
+  delete str3;
+  delete str4;
+  delete ipstr;
+  return S;
+} // end ipN2ipS()
+
+ipNumber ipS2ipN (const ipString& ips)
+// ipString (dot notation) to ipNumber
+{
+  uint32_t byte1(0), byte2(0), byte3(0), byte4(0);
+  uint32_t pow;
+  size_t  i, beg, end;
+
+  // byte1
+  beg = 0;
+  end = nextstop(ips, beg);
+  if (end == beg)
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- digit expected at begin of field 1.\n";
+    return 0;
+  }
+  pow = 1;
+  for (i = end; i > beg; --i)
+  {
+    byte1 += (int(ips.Element(i - 1)) - int('0')) * pow;
+    pow *= 10;
+  }
+  if (byte1 > 255)
+  {
+    std::cerr << "** ipS2ipN(): ipString error -- field 1 excedes max 255\n";
+    return 0;
+  }
+
+  // byte2
+  if (ips.Element(end) == '.')
+    beg = end + 1;
+  else
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- '.' expected at end of field 1.\n";
+    return 0;
+  }
+  end = nextstop(ips, beg);
+  if (end == beg)
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- digit expected at begin of field 2.\n";
+    return 0;
+  }
+  pow = 1;
+  for (i = end; i > beg; --i)
+  {
+    byte2 += (int(ips.Element(i - 1)) - int('0')) * pow;
+    pow *= 10;
+  }
+  if (byte2 > 255)
+  {
+    std::cerr << "** ipS2ipN(): ipString error -- field 2 excedes max 255\n";
+    return 0;
+  }
+
+  // byte3
+  if (ips.Element(end) == '.')
+    beg = end + 1;
+  else
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- '.' expected at end of field 2.\n";
+    return 0;
+  }
+  end = nextstop(ips, beg);
+  if (end == beg)
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- digit expected at begin of field 3.\n";
+    return 0;
+  }
+  pow = 1;
+  for (i = end; i > beg; --i)
+  {
+    byte3 += (int(ips.Element(i - 1)) - int('0')) * pow;
+    pow *= 10;
+  }
+  if (byte3 > 255)
+  {
+    std::cerr << "** ipS2ipN(): ipString error -- field 3 excedes max 255\n";
+    return 0;
+  }
+
+  // byte4
+  if (ips.Element(end) == '.')
+    beg = end + 1;
+  else
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- '.' expected at end of field 3.\n";
+    return 0;
+  }
+  end = nextstop(ips, beg);
+  if (end == beg)
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- digit expected at begin of field 4.\n";
+    return 0;
+  }
+  pow = 1;
+  for (i = end; i > beg; --i)
+  {
+    byte4 += (int(ips.Element(i - 1)) - int('0')) * pow;
+    pow *= 10;
+  }
+  if (byte4 > 255)
+  {
+    std::cerr << "** ipS2ipN(): ipString error -- field 4 excedes max 255\n";
+    return 0;
+  }
+
+  // check that we used all of ips
+  if (ips.Element(end) != '\0')
+  {
+    std::cerr << "** ipS2ipN(): ipString syntax error -- '\0' expected at end of field 4.\n";
+    return 0;
+  }
+  return (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
+} // end ipS2ipN()
+
+char* int2str (uint32_t n)
+// uint32_t to string
+{
+  char c [15];  // max 15 digits -- enough for 32 bit ints
+  size_t r;
+  size_t l = 0;
+  if (n == 0)
+  {
+    char* str = new char [2];
+    str[1] = '\0';
+    str[0] = '0';
+    return str;
+  }
+
+  while ((n > 0) && (l <= 15))
+  {
+    r = n % 10;
+    switch (r)
+    {
+      case 0:
+        c[l] = '0';
+        break;
+      case 1:
+        c[l] = '1';
+        break;
+      case 2:
+        c[l] = '2';
+        break;
+      case 3:
+        c[l] = '3';
+        break;
+      case 4:
+        c[l] = '4';
+        break;
+      case 5:
+        c[l] = '5';
+        break;
+      case 6:
+        c[l] = '6';
+        break;
+      case 7:
+        c[l] = '7';
+        break;
+      case 8:
+        c[l] = '8';
+        break;
+      case 9:
+        c[l] = '9';
+    } // end switch()
+    n = n / 10;
+    ++l;
+  } // end while()
+  if ((l > 15) && (n > 0))
+  {
+    std::cerr << "** overflow error converting int to string\n";
+    char* str = new char [2];
+    str[1] = '\0';
+    str[0] = '0';
+    return str;
+  }
+  char* str = new char [l + 1];
+  str[l] = '\0';
+  for (n = 0; n < l; ++n)
+    str[n] = c[l - n - 1];
+  return str;
+} // end int2str()
+
+size_t nextstop(const fsu::String& ips, size_t i)
+// return location index of the next non-digit beginning at i
+{
+
+  while (isdigit(ips.Element(i))) { ++i; }
+  return i;
+} // end nextstop()
+

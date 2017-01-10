@@ -1,0 +1,13 @@
+ 
+-a.txt----------------------------------------------
+
+ Input file name: a.txt
+            size: 8
+
+           algorithm  errors     comp_count
+           ---------  ------     ----------
+    g_selection_sort       0             36
+    g_insertion_sort       0             26
+    alt::g_heap_sort       0             25
+    fsu::g_heap_sort       0             24
+          List::Sort       0             14

@@ -1,0 +1,370 @@
+/*  iostream.txt
+    Chris Lacher
+
+    This file is a pseudo version of iostream.h, designed to facilitate
+    understanding the the C++ iostream hierarchy. It contains nearly correct
+    definitions of the classes ios, istream, ostream, iostream, ifstream,
+    ofstream, and fstream. 
+
+    These definitions are not exactly correct due to incompleteness only. 
+    Some things are left out, for example, a discussion of the streambuff
+    hierarchy. This file could be expanded to provide a complete
+    implementation of the C++ I/O system.
+
+    This file also contains implementations of most of the methods, again
+    because these help ground the understanding of the real iostream
+    system. 
+
+    copyright 1995 - 2003, R.C. Lacher
+*/
+
+class ios
+{
+public:
+  // ios status functions
+  // these read and/or manipulate the status bits
+
+  int        rdstate        () const; // interpret value using io_state enumeration
+  int        bad            () const; // true iff bad state (i.e., bad bit is set)
+  int        fail           () const; // true iff bad or fail state 
+  int        eof            () const; // true iff stream is at end of file
+  int        good           () const; // true iff good state 
+  int        clear          (int state = 0); // sets stream state bits
+  int        operator !     () const; // true iff either bad or fail state
+  int        operator void* () const; // false iff either bad or fail state
+
+  // ios binding functions
+
+  streambuf* rdbuf          (); // returns ptr to stream's streambuff object
+
+  ostream*   tie            (); // returns ptr to the tied ostream
+  ostream*   tie            (ostream*); 
+  // ties current stream to specified ostream, which is called the "tied
+  // stream".  Returns pointer tp previously tied stream. 
+  // For an istream ist, this means that the tied stream will be
+  // flushed whenever the ist needs input; for an ostream ost, this means that
+  // the tied stream will be flushed whenever ost is flushed. By default, cin
+  // is tied to cout, cout is tied to cerr, and cerr is tied to clog. Tying
+  // streams forces ostreams to output their contents before input operations. 
+    
+  static void sync_with_stdio ();
+  // causes cin, cerr, clog, cout to operate by means of the C standard I/O
+  // connections stdin, stdout, and stderr; also implies unit buffering.
+  // This is useful when mixing old C code with C++, otherwise not recommended.
+
+  // ios formatting functions
+  // these read and/or manipulate format flags
+
+  long flags () const;  
+  // returns current flags (interpret using enumerated type)
+  long flags (long newflags);
+  // sets flags to newflags; returns oldflags
+  long setf  (long bits);
+  // sets those flags specified in bits; returns oldflags
+  // called by iomanipulator setiosflags (long bits)
+  long setf  (long bits, long field);
+  // clears all flags specified in field, then sets flags in bits
+  long unsetf (long bits);
+  // clears flags specified in bits
+  // called by iomanipulator resetiosflags(long bits)
+
+  char fill (char fillch);
+  // sets fill character (default = ' '); returns old fill character;
+  // called by iomanipulator setfill (char)
+
+  int precision () const;  // returns precision value (>= 0)
+  int precision (int val);
+  // sets precision (default = 0, which means as precise as possible);
+  // called by iomanipulator setprecision (int).
+
+  int width() const;       // returns width value (>= 0)
+  int width(int val);
+  // sets width value; note: width reset to 0 after each extraction
+  // called by iomanipulator setw (int)
+
+  // client bits -- these 4 functions not always implemented
+
+  static long bitalloc (); // allocates a format bit and returns its mask
+  static int xalloc    (); // allocates a format word and returns its index 
+  long& iword          (int index) const;
+  // returns reference to an allocated format word, given its index
+  void*& pword         (int index) const;
+  // returns reference to an allocated format pointer, given its index.
+  // only difference: iword returns reference to a long and pword returns
+  // a reference to a generic pointer 
+
+  // meaning of precision (n)
+  // n <= 0: default
+  // n >  0: if ios::fixed bit is set, determines number of places
+  //            displayed after decimal point (forced if ios::showpoint
+  //            is also set)
+  //         if ios::fixed is not set, determines number of significant
+  //            digits displayed
+  // Called by manipulator setprecision (n)
+
+  // meaning of width (n)
+  // n <= 0: no effect
+  // n >  0: on output, sets minimum number of characters output 
+  //           (filled with fill char)
+  //         on input, sets length of buffer for string extractions
+  // Note: reset to 0 after each insertion and extraction
+  // Called by manipulator setw (n)
+
+  // ios enumerated types
+
+  enum io_state // four io_states
+    {
+      goodbit    = 0x0001, // everything is OK
+      eofbit     = 0x0002, // stream is at end of file
+      failbit    = 0x0004, // the last I/O operation failed, otherwise OK
+      badbit     = 0x0008  // a serious error has occurred, stream unusable
+    }  ;
+
+  enum          // 15 format flags
+  // parameter for ios methods setf(), unsetf(), e.g.,
+  // setf(ios::right | ios::dec | ios::showpoint | ios::fixed)
+    {
+      skipws     = 0x0001, // skip white space before extraction
+      left       = 0x0002, // left-justify output
+      right      = 0x0004, // right-justify output
+      internal   = 0x0008, // (numeric output) prefix left..fill..number right
+      dec        = 0x0010, // decimal 
+      oct        = 0x0020, // octal
+      hex        = 0x0040, // hexadecimal 
+
+      // dec, oct, hex affect both input and output. On input, integral values
+      // are interpreted in base notation and output uses appropirate mode.
+      // Default is no bits set and means "C rules" apply:
+      //    output is decimal output and input of integral types is 
+      //    interpreted  as dec, oct, or hex depending leading/prefix:
+      //    (leading 1..9) => dec, (leading 0) => oct, (leading 0x) => hex
+
+      showbase   = 0x0080,  // show base indicator on output (0 and 0x)
+      showpoint  = 0x0100,  // show decimal point (for fixed point output)
+      uppercase  = 0x0200,  // out: use upper case indicators for hex and dec 
+      showpos    = 0x0400,  // out: force show of sign for positive numbers
+      scientific = 0x0800,  // out: force scientific notation for float
+      fixed      = 0x1000,  // out: force decimal notation for float
+      unitbuf    = 0x2000,  // out: flush buffer after each insertion
+      stdio      = 0x4000   // out: the C stdout and stderr are flushed 
+                            //      after each insertion
+    }  ;
+
+  enum open_mode // 8 open modes
+  // optional second parameter to the fstream open() method, e.g.,
+  // open(filename, ios::out | ios::binary | ios::noreplace)
+    {
+      in         = 0x0001,  // open file for input -- read
+      out        = 0x0002,  // open file for output -- write
+      ate        = 0x0004,  // seek to eof when file is opened 
+                            // -- "automatic to end"
+      app        = 0x0008,  // open file in append mode 
+                            // -- writing will occur at end
+      trunc      = 0x0010,  // truncate the file if it exists
+      nocreate   = 0x0020,  // don't create file; 
+                            // -- open() will fail if file does not exist
+      noreplace  = 0x0040,  // don't replace file; 
+                            // -- open() will fail if file exists
+      binary     = 0x0080   // open file in binary mode 
+                            // -- write bytes only, no formatting characters
+    }  ;
+
+  enum seek_dir // 3 file seek modes
+    {
+      beg,   // seek relative to beginning of file
+      cur,   // seek relative to current position
+      end    // seek relative to end of file
+    }  ;
+
+protected:
+  unsigned long flags;
+  // stores flag bits in first 15 places (from right)
+
+  unsigned long state;
+  // stores 4 state bits;
+
+  unsigned long mode;
+  // stores open (11) and seek (3) modes
+
+  // Note: there are unused bits in each of these words, unused bits that
+  // may be used by clients -- they are allocated by the bitalloc method.
+  // Also note: the choice of enumerations is not specified by C++; the
+  // particular enumerations shown below work, and are those chose by the
+  // Borland compiler.
+  // Even the choice of names, sizes, and number is implementation-dependent.
+  // For example, we could store all of the state, flag, and mode bits
+  // in one long. (This would require a different choice of enumeration 
+  // values, but that is not specified by C++ either.) That would still 
+  // leave (8 * sizeof(long) - 33) bits unused.
+
+  int          widthvalue, precisionvalue; // initialized to 0
+  char         fillcharacter;              // initialized to ' '
+  streambuff*  streambuffer;   // pointer to a streambuff object
+
+  // plus other data, such as specifying tied streams
+
+}  ;  // end pseudo-definition of class ios
+
+// iomanipulators prototyped in iomanip.h
+
+// these take no parameters
+dec;     // calls setf(ios::dec)
+hex;     // calls setf(ios::hex)
+oct;     // calls setf(ios::oct)
+ws;      // calls setf(ios::ws)
+endl;    // flushes streambuff and inserts '\n'
+ends;    // flushes streambuff and inserts '\0'
+flush;   // flushes streambuff
+upper;   // sets uppercase flag
+
+// user can define manipulators, e.g.:
+ostream& dingding (ostream& os)
+{
+  os << "\a\a";
+  return os;
+}
+
+// these manipulators take parameters and are more complicated to define
+// the implementations use templates and function objects
+// there is an extensive collection of manipulators defined in xiomanip.h
+
+setbase       (int b);      // sets base (radix) for numericals
+// b = 8, 10, 16 sets oct, dec, hex flag, respectively
+// b = 0 means default: decimal on output, C rules for integers on input
+setiosflags   (long flags); // calls ios::setf (flags)
+resetiosflags (long flags); // calls ios::unsetf (flags)
+setfill       (char ch);    // calls ios::fill (ch)
+setprecision  (int n);      // calls ios::precision (n)
+setw          (int n);      // calls ios::width (n)
+
+// possible implementations of ios member functions
+
+long ios::flags () const
+{
+  return flags;
+}
+
+long ios::flags (long newflags)
+{
+  long oldflags = flags;
+  flags = newflags;
+  return oldflags;
+}
+
+long ios::setf  (long bits)
+  // called by iomanipulator setiosflags (long bits)
+{
+  long oldflags = flags;
+  flags |= bits;
+  return oldflags;
+}
+
+long ios::setf  (long bits, long field)
+{
+  long oldflags = flags;
+  flags = (flags & ~field) | (bits & field);
+  return oldflags;
+}
+
+long ios::unsetf (long bits)
+  // called by iomanipulator resetiosflags(long bits)
+{
+  long oldflags = flags;
+  flags &= ~bits;
+  return oldflags;
+}
+
+char ios::fill (char fillch) 
+  // sets fill character (default = ' '); returns old fill character;
+  // called by iomanipulator setfill (char)
+{
+  char oldfill = fillcharacter;
+  fillcharacter = fillch;
+  return oldfill;
+}
+
+int ios::precision () const
+{
+  return precisionvalue;
+}
+
+int ios::precision (int val);
+// sets precision (default = 0, which means as precise as possible);
+// called by iomanipulator setprecision (int).
+{
+  int oldprecision = precisionvalue;
+  precisionvalue = val;
+  return oldprecision;
+}
+
+int ios::width() const
+{
+  return widthvalue;
+}
+
+int ios::width(int val)
+  // called by iomanipulator setw (int)
+{
+  int oldwidth = widthvalue;
+  widthvalue = (val);
+  return oldwidth;
+}
+
+class ostream : public class ios
+{
+  // overloads of operator <<
+  friend ostream& operator << (ostream& , char);
+  friend ostream& operator << (ostream& , int);
+  friend ostream& operator << (ostream& , long);
+  friend ostream& operator << (ostream& , unsigned char);
+  friend ostream& operator << (ostream& , unsigned int);
+  friend ostream& operator << (ostream& , unsigned long);
+  friend ostream& operator << (ostream& , float);
+  friend ostream& operator << (ostream& , double);
+  friend ostream& operator << (ostream& , long double);
+  friend ostream& operator << (ostream& , char* );
+  // plus others
+
+public:
+  // various overloads of method put ()
+  void put (char);
+  void put (int);
+  void put (long);
+  void put (float);
+  void put (double);
+  // plus others
+} cout, cerr, clog;  // predefined objects
+
+class istream : public class ios
+{
+  // overloads of operator >>
+  friend istream& operator >> (istream& , char);
+  friend istream& operator >> (istream& , int);
+  friend istream& operator >> (istream& , long);
+  friend istream& operator >> (istream& , unsigned char);
+  friend istream& operator >> (istream& , unsigned int);
+  friend istream& operator >> (istream& , unsigned long);
+  friend istream& operator >> (istream& , float);
+  friend istream& operator >> (istream& , double);
+  friend istream& operator >> (istream& , long double);
+  friend istream& operator >> (istream& , char* );
+  // plus others
+
+public:
+  // various overloads of methods get(), peek()
+  char get ();  
+  void get (char&);
+  void get (int&);
+  void get (float&);
+  // plus others
+  char peek ();
+  // plus others
+} cin;     // predefined object
+
+class fstreambase
+{
+public:
+  bool open  (char* filename, long mode);
+  bool close ();
+  // plus others
+} ;

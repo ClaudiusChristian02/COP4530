@@ -1,0 +1,4 @@
+this was a difficult project for me i spent a lot of time trying to make it work without the hint methods and using 
+previously created lists and queues. I finally implemented the methods provided in the document. In all it took
+me about 14 hours to make it work.  Some of teh challenges was clearing the buffer, next it was diffucult trying
+to get the program to work with hw1 lists. I was able to repurpose a vector.h file from a previous class.

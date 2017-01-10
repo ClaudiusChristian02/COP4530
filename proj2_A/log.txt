@@ -1,0 +1,24 @@
+The first thing I did was complete the function in bt2iter.h, then bst_adt.h, and then the other files. Next I went through the files
+making sure they have the correct container and typedef. After that I compiled and worked my way throught the executible files. I had
+a segmentation fault at rbllt. Here I solved the problem by inserting code from my homework 3 oaa.h file and add two bools to the struct
+in bst_adt.h 
+
+
+Explain the utility of iterators on Sets and Map
+
+If you want to visit all elements in a set or map because you want to print, but don't use an iterator to search for a value.
+
+
+
+
+Explain what the runtime and other efficiency considerations are between RBLL Trees and BS Trees.
+
+a red black tree is always properly ballanced and a simple binary search tree might degenerate to a linked
+list. a simple linked list search will be linear.
+
+
+
+Explain what the runtime and other efficiency considerations are between ADT-based iterators and threaded iterators.
+
+when traversing an adt based tree you need a stack. With a threaded iterated you just need the threaded links. ADT is faster 
+at insertion time and reordering. The threaded iterator insertion and deletion is slower than ADT because you don't need a stack.

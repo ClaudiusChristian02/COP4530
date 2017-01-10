@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "g++47 -std=c++11 -Wall -Wextra -c -I. -I/home/courses/cop4530p/spring14/cpp -I/home/courses/cop4530p/spring14/tcpp $1.cpp"
+g++47 -std=c++11 -Wall -Wextra -c -I. -I/home/courses/cop4530p/spring14/cpp -I/home/courses/cop4530p/spring14/tcpp $1.cpp

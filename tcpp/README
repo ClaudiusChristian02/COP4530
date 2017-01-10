@@ -1,0 +1,49 @@
+The directory tcpp/ contains the fsu:: template library.
+
+The file name conventions are as follows:
+
+cxxxx.h   The leading letter "c" indicates the file contains adaptor template
+          classes. These adaptor classes will have at least one "C" template
+          parameter representing a container class. These adaptor classes may
+          also have other template parameters representing proper types,
+          function classes, or predicate classes.
+
+txxxx.h   The leading letter "t" indicates the file contains template classes.
+          These classes will have at least one "T" template parameter
+          representing a proper type (but no "C" parameter). These adaptor
+          classes may also have other template parameters representing proper
+          types, function classes, or predicate classes.
+
+gxxxx.h   The leading "g" indicates the file contains generic algorithms. The
+          are grouped by classification into files whose names derive
+          from the classification.
+
+
+Class definitions, function prototypes, and all implementations of methods and
+functions are logically contained in the header (.h) file. There are some cases where
+some or all of the implementations are in separate physical files, but in these
+cases the implementation files are #included into the header file, inside the
+namespace. Direct inclusion or use of any file in tcpp/ with suffix ".cpp"
+should not be done and will lead to many logic errors. 
+
+NOTICE: library is upgraded to modern 6.0 style; some applications may require editing
+
+Style 6.0 means:
+
+1. Multi-word identifiers use uppercase letter to demark the beginning of each word
+   after the first one LikeThis and likeThisToo. We don't use underscores for
+   this purpose.
+
+   Exception: in the case of names for generic algorithms, we always begin the
+   name with "g_" and then append a specific descriptive name using lower case
+   letters and the underscore separator, as in g_lower_bound.
+
+2. Type names (classes) begin with uppercase letters, such as MyType or BaseClass
+
+3. Function names, including class member functions, begin with upper case
+   letters, LikeThis and This
+
+4. Variables (objects) identifires begin with lower case letters,
+   likeThis and this
+
+5. Class member variables have a trailing underscore, likeThis_ and this_

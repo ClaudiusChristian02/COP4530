@@ -1,0 +1,12 @@
+ 
+-n.30000----------------------------------------------
+
+ Input file name: n.30000
+            size: 30000
+
+           algorithm     comp_count
+           ---------     ----------
+    g_selection_sort      450015000
+    g_insertion_sort      224483246
+         g_heap_sort         812994
+          List::Sort         410396

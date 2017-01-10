@@ -1,0 +1,194 @@
+
+
+Entries of hash tables are stored in a vector and the resolution is done by using lists.
+
+
+HashTableIterator<K,D,H> HashTable<K,D,H>::Insert (const K& k, const D& d)
+
+EntryType e(k,d);
+    
+Iterator i;
+    
+// TBS
+
+	
+// with this we address the list in the vector
+	
+size_t key2int = hashObject_(k) % numBuckets_;
+
+	
+// inserts key value pair
+	
+bucketVector_[key2int].Insert(e);
+
+    
+return i;
+  }
+
+but I made a few mistakes here is what I added next
+
+i.bucketItr_ = bucketVector_[key2int].Insert(e);
+
+
+HashTableIterator<K,D,H> HashTable<K,D,H>::Includes (const K& k) const
+// with this we address the list in the vector
+// if a similar key value is found it removes the value from the list
+
+
+bool HashTable<K,D,H>::Retrieve (const K& k, D& d) const
+I made it first by hafter making the function above I realized I made a mistake.
+Here is the mistake
+
+bool HashTable<K,D,H>::Retrieve (const K& k, D& d) const
+// goes through similar key values
+	  
+for (auto i = list.Begin(); i != list.End(); ++i){
+
+		  
+// if a similar key value is found it removes the value from the list
+		  
+if (i->key_ == k){
+
+			  
+list.Remove(i);
+
+			  
+return true;
+		  }
+
+	  }
+
+
+then I removed
+d = list.bucketItr_->data_;
+
+and replaced it with bucketVector_[list.bucketNum_].Remove(list.bucketItr_);	
+
+after making these changes I compiled got errors and then fixed the errors.
+
+
+
+first I inserted numbers into routing table by assigning them to variables.
+
+next I did 5.
+
+I was unsure whether to use dN or rN in this line 
+(*optr) << msgID << ' ' << dN << " " << ipC << " " << netID << " " << hostID << endl;
+
+after running the program
+
+I got the following errors when trying to compile for the first time;
+
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>make -f makefile.ip
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./ipmain.cpp
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./iprouter.cpp
+./iprouter.cpp:15:6: warning: unused parameter âverifyâ [-Wunused-parameter]
+./iprouter.cpp: In member function âvoid Router::Go(const char*, const char*)â:
+./iprouter.cpp:86:147: error: âendlâ was not declared in this scope
+./iprouter.cpp:86:147: note: suggested alternative:
+In file included from /backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/istream:41:0,
+                 from /backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/fstream:40,
+                 from ./iprouter.cpp:10:
+/backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/ostream:562:5: note:   âstd::endlâ
+make: *** [iprouter.o] Error 1
+
+I then corrected the error and got this compile error:
+
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./ipmain.cpp
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./iprouter.cpp
+./iprouter.cpp:15:6: warning: unused parameter âverifyâ [-Wunused-parameter]
+./iprouter.cpp: In member function âvoid Router::Go(const char*, const char*)â:
+./iprouter.cpp:86:147: error: âendlâ was not declared in this scope
+./iprouter.cpp:86:147: note: suggested alternative:
+In file included from /backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/istream:41:0,
+                 from /backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/fstream:40,
+                 from ./iprouter.cpp:10:
+/backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/ostream:562:5: note:   âstd::endlâ
+make: *** [iprouter.o] Error 1
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>clear
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>make -f makefile.ip
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./iprouter.cpp
+./iprouter.cpp: In member function âvoid Router::Go(const char*, const char*)â:
+./iprouter.cpp:103:147: error: âendlâ was not declared in this scope
+./iprouter.cpp:103:147: note: suggested alternative:
+In file included from /backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/istream:41:0,
+                 from /backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/fstream:40,
+                 from ./iprouter.cpp:10:
+/backup/src/gcc/gcc-4.7.2/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.7.2/../../../../include/c++/4.7.2/ostream:562:5: note:   âstd::endlâ
+make: *** [iprouter.o] Error 1
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>clear
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>make -f makefile.ip
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./iprouter.cpp
+make: *** No rule to make target `iputil.cpp', needed by `iputil.o'.  Stop.
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>cp /home/course/cop4530p/LIB/hw5/iputil.cpp .
+cp: cannot stat `/home/course/cop4530p/LIB/hw5/iputil.cpp': No such file or directory
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>ls /home/course/cop4530p/LIB/tcpp/
+ls: /home/course/cop4530p/LIB/tcpp/: No such file or directory
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>clear
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>make -f makefile.ip                 
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./iputil.cpp
+./iputil.cpp: In function âipClass ipInterpret(const ipNumber&, ipNumber&, ipNumber&)â:
+./iputil.cpp:45:30: warning: suggest parentheses around comparison in operand of â&â [-Wparentheses]
+./iputil.cpp:56:30: warning: suggest parentheses around comparison in operand of â&â [-Wparentheses]
+./iputil.cpp:67:30: warning: suggest parentheses around comparison in operand of â&â [-Wparentheses]
+g++47 -std=c++11 -Wall -Wextra -o iprouter.x ipmain.o iprouter.o bitvect.o hashfunctions.o primes.o xstring.o iputil.o
+ipmain.o: In function `main':
+ipmain.cpp:(.text+0x5b7): undefined reference to `Router::Clear()'
+collect2: error: ld returned 1 exit status
+make: *** [iprouter.x] Error 1
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>make -f makefile.ip
+g++47 -std=c++11 -Wall -Wextra -I. -I/home/courses/cop4530p/LIB/cpp -I/home/courses/cop4530p/LIB/tcpp -c ./iputil.cpp
+g++47 -std=c++11 -Wall -Wextra -o iprouter.x ipmain.o iprouter.o bitvect.o hashfunctions.o primes.o xstring.o iputil.o
+ipmain.o: In function `main':
+ipmain.cpp:(.text+0x5b7): undefined reference to `Router::Clear()'
+collect2: error: ld returned 1 exit status
+make: *** [iprouter.x] Error 1
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>clear
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>make -f makefile.ip
+g++47 -std=c++11 -Wall -Wextra -o iprouter.x ipmain.o iprouter.o bitvect.o hashfunctions.o primes.o xstring.o iputil.o
+ipmain.o: In function `main':
+ipmain.cpp:(.text+0x5b7): undefined reference to `Router::Clear()'
+collect2: error: ld returned 1 exit status
+make: *** [iprouter.x] Error 1
+
+
+I compiled and I got this in return
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>cat ip.10.log2
+msgID:    a1 dest: 166FF67 route class: A netID: 1000000 hostID: 66FF67
+msgID:    a2 dest: 55566FAB route class: A netID: 55000000 hostID: 566FAB
+msgID:    a3 dest: 7F5A4E2C route class: A netID: 7F000000 hostID: 5A4E2C
+msgID:    a4 dest: 123FFBBA route class: A netID: 12000000 hostID: 3FFBBA
+msgID:    a5 dest: D122DDEE route class: C netID: 1122DD00 hostID: EE
+msgID:    a6 dest: DD771234 route class: C netID: 1D771200 hostID: 34
+msgID:    a7 dest: CBA55667 route class: C netID: BA55600 hostID: 67
+msgID:    a8 dest: AA9956AB route class: B netID: 2A990000 hostID: 56AB
+msgID:    a9 dest: 889900BB route class: B netID: 8990000 hostID: BB
+msgID:   a10 dest: 9988AABB route class: B netID: 19880000 hostID: AABB
+cchristi@linprog2.cs.fsu.edu:~/cop4530s/hw5>diff ip.10.log2 ip.10.log
+1,10c1,10
+< msgID:    a1 dest: 166FF67 route class: A netID: 1000000 hostID: 66FF67
+< msgID:    a2 dest: 55566FAB route class: A netID: 55000000 hostID: 566FAB
+< msgID:    a3 dest: 7F5A4E2C route class: A netID: 7F000000 hostID: 5A4E2C
+< msgID:    a4 dest: 123FFBBA route class: A netID: 12000000 hostID: 3FFBBA
+< msgID:    a5 dest: D122DDEE route class: C netID: 1122DD00 hostID: EE
+< msgID:    a6 dest: DD771234 route class: C netID: 1D771200 hostID: 34
+< msgID:    a7 dest: CBA55667 route class: C netID: BA55600 hostID: 67
+< msgID:    a8 dest: AA9956AB route class: B netID: 2A990000 hostID: 56AB
+< msgID:    a9 dest: 889900BB route class: B netID: 8990000 hostID: BB
+< msgID:   a10 dest: 9988AABB route class: B netID: 19880000 hostID: AABB
+---
+> msgID:    a1 dest: 0166FF67 route class: C netID: 1ADADA00 hostID: 000000DA
+> msgID:    a2 dest: 55566FAB route class: B netID: 2DAD0000 hostID: 0000ADAD
+> msgID:    a3 dest: 7F5A4E2C route class: B netID: 3BB10000 hostID: 00002345
+> msgID:    a4 dest: 123FFBBA route class: C netID: 0BA12300 hostID: 00000045
+> msgID:    a5 dest: D122DDEE route class: C netID: 1CDCDC00 hostID: 000000DC
+> msgID:    a6 dest: DD771234 route class: A netID: 01000000 hostID: 00ABCDEF
+> msgID:    a7 dest: CBA55667 route class: A netID: 12000000 hostID: 00345678
+> msgID:    a8 dest: AA9956AB route class: A netID: 23000000 hostID: 00456789
+> msgID:    a9 dest: 889900BB route class: A netID: 34000000 hostID: 0056789A
+> msgID:   a10 dest: 9988AABB route class: A netID: 45000000 hostID: 006789AB
+
+I suspect the dN I used early was not correct
+
+after making the changes it compiled and ran correctly

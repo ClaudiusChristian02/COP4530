@@ -1,0 +1,22 @@
+Text Analysis for files: data6.in 
+word                 frequency 
+----                 --------- 
+'a'                          1
+'b'                          1
+'dd'                         1
+'eee'                        1
+aaa                          1
+bbb's                        1
+c                            1
+c's                          1
+dddeee                       1
+f                            1
+fff                          1
+gg                           1
+ggg                          1
+hhh                          1
+www                          1
+xxxyyy                       1
+zzz                          1
+Number of words: 17
+Vocabulary size: 17

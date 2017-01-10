@@ -1,0 +1,43 @@
+COP 4530 Project 2
+Using a Trojan Horse Comparison Operator to Analyze Algorithm Runtimes
+cchristi
+cc08g
+
+
+1. 
+
+a. T
+b. T
+c. T
+
+
+2.
+
+a. (correct answer) works with random access iterator
+b. upper bound of O(log n) but not Omega(log n) becuase it might be faster than omega
+c. lowerbound iterator that works with a list you still need log n iterations, but to calculate the middle element linear time is still needed
+d. (correct answer) O(n) the minimum comparison is lower than number of elements 
+
+
+3.
+
+g_selection: n^2,     comp_count == n^2                 : must go through entire list the last one might be the smallest one
+g_insertion: n^2,     compt_count almost equals n log n : goes through all elements to find element then insert found element in already sorted part
+g_heap     : n log n, 812994 closer to 446180           : similar to selection sort by when it moves element it moves groups of elements instead of one at a time
+list       : n log n,  comp_count almost equals n log n : 
+
+
+4.  
+
+forward iterators cannot use fsu instead sequence
+if you had a deq vector or random access iterator fsu search element can be used
+very large range fsu is more appropriate because of log n
+a small number of elements can use a linear search
+
+
+Log.txt
+
+The first thing I did was create compare_spy.h. Next I created gssearch.h with simply copying the gbsearch
+functions, and creating a new count function. I then compiled and ran the program. Next I started on the
+report questions. This is where i realized my implementation of lower and upper functions in gsearch could
+be made better. I altered these functions, and removed the counter function.

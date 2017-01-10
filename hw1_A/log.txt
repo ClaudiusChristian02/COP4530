@@ -1,0 +1,6 @@
+I first went and created Linkin. My first attempt to do this was without using a sentinal. I could not so I created typename List<T>::Link *previous = location->prev_; 
+instead.Next I simply created the necessary pointers to insert nodes. I repeated the process for oldLink in reverse. I next moved onto reverse. My first attempt at 
+reverse I simply cycled through the list. After that attempt I realized I needed to keep track of the last element in the list and stop when the element became the 
+first element. I then created a while loop where I kept track of the last node and in the while loop I reused the functions linkOut and linkIn. After this I moved onto
+creating name.com. I found this to be more difficult than the list.cpp. After iterating through the problem set one letter at a time I finally was able to get the
+correct answer.

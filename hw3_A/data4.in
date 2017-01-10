@@ -1,0 +1,39 @@
+Objectives:} Experience with binary search trees [BSTs] and partially ordered
+trees [POTs]; implementing heapsort; the ADT Set; applications to text analysis.
+Make sure your code distribution directories are up to date by invoking your
+``update'' command.  You may use any C library files and the C++ libraries
+defined in { iostream.h}, { fstream.h}, and { iomanip.h}.  You may also use the
+string class library defined in { string}.  Otherwise the only include files
+allowed are those in the distribution directories { cpp} and { tcpp}.  Any other
+C++ classes used must be defined and implemented in your program files.  You are
+to design and implement a text analysis application with the following
+attributes: can read an arbitrary text file and extract all of the words in the
+file, maintaining the unique words, along with the frequency of occurrence of
+each word, in an internal data structure.  Words are converted to lower case
+before comparison and storage.  A ``word'' is understood to be a string of
+letters.  Non-letter characters are ignored when at the beginning or end of a
+word.  Hyphens and apostrophes are considered part of the word, so that
+contractions and hyphenated constructs are counted as separate words.  can write
+an analysis of its current stored words.  This analysis consists of an
+alphabetical listing of the words together with their frequencies, followed by a
+count of the total number of words and the vocabulary size (number of unique
+words).  All of the input files read for the analysis should be listed at the
+top of the analysis file.  can be easily upgraded to provide further analysis,
+including checking words in its data structure with a file of known words.
+operates through a user interface that provides a menu of options including at
+least the following: Read a file.} Read the words of the file into the structure
+(and report summary to screen).  Analyze current data.} Write an analysis of the
+current structure to a file (and report summary to screen).  Erase current
+data.} Clear all data from the structure.  display Menu.} eXit program.} should
+cycle back to a command prompt until the user selects the {eXit} option.  The
+internal data structure should be one of the following three options: An object
+of type { TBST <pair>}, where { TBST <T>} is a template class implementing the
+Binary Search Tree ADT.  An object of type { TSet <pair>}, where { TSet <T>} is
+a template class implementing the Set ADT and using a protected binary search
+tree as its primary data container.  {2.3} An object of type { TSet <pair>},
+where { TSet <T>} is a template class implementing the Set ADT and using a
+protected { TTable <pair>} as its primary data container.  {3} As usual, you
+should employ good software design practice.  Your application should be
+completely robust and all classes you define should be thoroughly tested for
+correct function, robust behavior, and against memory leaks.
+

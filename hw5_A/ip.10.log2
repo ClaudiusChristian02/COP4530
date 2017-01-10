@@ -1,0 +1,10 @@
+msgID:    a1 dest: 0166FF67 route class: C netID: 1ADADA00 hostID: 000000DA
+msgID:    a2 dest: 55566FAB route class: B netID: 2DAD0000 hostID: 0000ADAD
+msgID:    a3 dest: 7F5A4E2C route class: B netID: 3BB10000 hostID: 00002345
+msgID:    a4 dest: 123FFBBA route class: C netID: 0BA12300 hostID: 00000045
+msgID:    a5 dest: D122DDEE route class: C netID: 1CDCDC00 hostID: 000000DC
+msgID:    a6 dest: DD771234 route class: A netID: 01000000 hostID: 00ABCDEF
+msgID:    a7 dest: CBA55667 route class: A netID: 12000000 hostID: 00345678
+msgID:    a8 dest: AA9956AB route class: A netID: 23000000 hostID: 00456789
+msgID:    a9 dest: 889900BB route class: A netID: 34000000 hostID: 0056789A
+msgID:   a10 dest: 9988AABB route class: A netID: 45000000 hostID: 006789AB

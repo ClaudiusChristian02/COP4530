@@ -1,0 +1,86 @@
+Define and give examples of generic algorithms: 6 Generic Heaps in course notes
+
+Define the ADT Priority Queue: course notes below generic heaps
+
+used the max-heapify function on the http://en.wikipedia.org/wiki/Binary_heap wikipage as a guide
+
+then I heavily modified t_pop_heap( I beg, I end) by removing the do while loop and replacing it with
+g_heap_repair(beg, 0, end).
+
+I then entered the numbers 5 3 9 into the console, but it retunred 9 3 5. THe sort doesn't seem to be working along with
+sort and repair wasn't working.
+
+I then gave up and went and to try and use the code written by the teacher. At first I tried the function with the
+predicate. The predicate function did not work. SO I tried the function without the predicate. I removed the do while
+loop and replaced it with a call to g_heap function. I replaced the line do while with the g_heap repair function call.
+in the g_heap function I removed g_XC.in the g_pop heap I removed the lines size_t i = 0, l, r;
+    bool finished = 0;
+
+next I compiled gheap.h with the command g++ -I. -I/home/courses/cop4530p/LIB/tcpp hsort.cpp which compiled ok. Next
+I entered the commands >echo 5 3 9 | a.out which returned 3 5 9 showing it worked.
+
+
+next I added the definition for template <class I>
+g_build_heap, and also did some other modifications to g_pop_heap and
+g_heap_sort. I recompiled and tested the code again with the commands given above, and everything worked. I then started
+testing numbers. It appears that the system works with large sets of numbers but not when you have only 3 numbers or less.
+the problem seems to be that it works with 6 elements, but not 7. I investigated more and it looks like it can sort an
+even number of elements, but not an odd number of elements. then when giving 9 3 5 it sorts but when doing 3 5 9 it doesn't
+sort. The problem seems to arrise when using the repair subtree method not when pushing items one by one. The error appears
+to be when building heap with repair subtrees. After staring at my work for a while I realized I was testing the wrong 
+function!!!
+
+the g_build_heap() function, it was missing the final repair of the root node. Adding a line to g_build_heap():
+
+fsu::g_heap_repair(beg, 0, end); resolves it.
+
+
+and in g_pop_heap():
+
+- g_heap_repair(beg, 0, end);
++ g_heap_repair(beg, 0, end - 1);
+
+With these fixes, both versions work (refactored version from
+g_pop_heap() and the version from Wikipedia).
+
+I then modified/ added several different functions to add predicate such as void g_build_heap(I beg, I end, P pred). inserted
+
+sort into the alt namespace
+
+when trying to find compare_spy.h using find /home/courses/cop4530p/LIB/ -name compare_spy.h
+ls
+
+however I did find the file in my project 1 files on my computer
+
+I ran the program and the following was the output:
+
+cchristi@linprog3.cs.fsu.edu:~/cop4530s/hw6>sort_spy.x
+ ** required arguments:
+     1: input filename
+     2: output filename
+ ** try again
+cchristi@linprog3.cs.fsu.edu:~/cop4530s/hw6>sort_spy.x a.txt o.txt
+
+ -a.txt----------------------------------------------
+
+ Input file name: a.txt
+            size: 8
+
+           algorithm  errors     comp_count         n    n lg n    n(n+1)/2
+           ---------  ------     ----------       ---    ------    --------
+    g_selection_sort       0             36         8        24          36
+    g_insertion_sort       0             26         8        24          36
+    alt::g_heap_sort       5              8         8        24          36
+    fsu::g_heap_sort       5              0         8        24          36
+          List::Sort       0             14         8        24          36
+
+ Process complete
+
+to debug I uncommented the error stuff, and ____ looked through the pop_heap
+the function was g_heap_repair(beg, 0, pred);
+
+however then there was 0 comparisons in the comp_count for g_heap_sort
+
+I then had to add an & to make P & pred
+
+after that everything works

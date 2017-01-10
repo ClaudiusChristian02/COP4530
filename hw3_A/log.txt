@@ -1,0 +1,14 @@
+THE PROGRAM DOES NOT MEET THE STANDARDS OF THE DESCRIPTION BECAUSE OF THE PERIODS BEFORE AND AFTER AND
+THE BACKSLASHES. THE PROGRAM FOLLOWS THE MODEL OF THE EXAMPLE PROGRAM WORDSMITH_I.X.
+
+associative is a container that has key value pairs that if you look up the key you get the value
+
+unimodal = map
+multimodal = multimap
+
+the first function I created was readtext. I spent a lot of time trying to figure out how to do the double
+apostrophe. I also spent a lot of time trying to figure out how to isalnum, and correctly use EntryType. 
+After fixing many many compile errors I learned I did not implement PushBack for fsu::String. I created 
+pushBack but I was still getting to many words. for example in data3.in I was getting 50 words instead of 38.
+I next had to work and try to remove the peroids and backlashes.
+

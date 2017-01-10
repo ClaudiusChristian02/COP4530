@@ -1,0 +1,19 @@
+subdirectory: area51/
+
+This directory contains executable files that should be run under the student's
+account. These illustrate:
+
+ - various technical points from the course, as referenced in lectures or
+   assignments
+ - example executables of completed assignments
+
+Versions with name ending with _s are executables for Sun/Solaris for running on
+one of the program machines. Versions name ending in _i are executables for
+Intel/Linux for running on one of the linprog machines.
+
+Note that these do not have execute permission in the course directory. To
+execute:
+
+1. Copy the file into your pwrsonal directory
+2. Change permissions to executable (chmod 700 filename)
+3. Execute by naming the file on the command line

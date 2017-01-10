@@ -1,0 +1,50 @@
+home    = /home/courses/cop4530p/LIB
+cpp     = $(home)/cpp
+tcpp    = $(home)/tcpp
+proj    = .
+incpath = -I$(proj) -I$(cpp) -I$(tcpp)
+CC      = g++47 -std=c++11 -Wall -Wextra
+
+common  =  bitvect.o hashfunctions.o primes.o xstring.o iputil.o
+
+all: iprouter.x ip_ranmap.x ip_ranmsg.x
+
+iprouter.x: ipmain.o iprouter.o $(common)
+	$(CC) -o iprouter.x ipmain.o iprouter.o $(common)
+
+ipmain.o: $(proj)/ipmain.cpp $(proj)/iprouter.h
+	$(CC) $(incpath) -c $(proj)/ipmain.cpp
+
+iprouter.o: $(proj)/iprouter.h $(proj)/iprouter.cpp $(proj)/hashtbl.h $(proj)/iputil.h
+	$(CC) $(incpath) -c $(proj)/iprouter.cpp
+
+hashfunctions.o: $(cpp)/hashfunctions.h $(cpp)/hashfunctions.cpp
+	$(CC) $(incpath) -c $(cpp)/hashfunctions.cpp
+
+xstring.o: $(cpp)/xstring.h $(cpp)/xstring.cpp
+	$(CC) $(incpath) -c $(cpp)/xstring.cpp
+
+bitvect.o: $(cpp)/bitvect.h $(cpp)/bitvect.cpp
+	$(CC) $(incpath) -c $(cpp)/bitvect.cpp
+
+primes.o: $(cpp)/primes.h $(cpp)/primes.cpp
+	$(CC) $(incpath) -c $(cpp)/primes.cpp
+
+iputil.o: $(proj)/iputil.h $(proj)/iputil.cpp
+	$(CC) $(incpath) -c $(proj)/iputil.cpp
+
+xran.o: $(cpp)/xran.h $(cpp)/xran.cpp
+	$(CC) $(incpath) -c $(cpp)/xran.cpp
+
+ip_ranmap.x: ip_ranmap.o xran.o $(common)
+	$(CC) $(incpath) -o ip_ranmap.x $(common) xran.o $(proj)/ip_ranmap.o
+
+ip_ranmsg.x: ip_ranmsg.o $(common)
+	$(CC) $(incpath) -o ip_ranmsg.x $(common) xran.o $(proj)/ip_ranmsg.o
+
+ip_ranmap.o: $(proj)/ip_ranmap.cpp  $(proj)/hashtbl.h $(proj)/iputil.h
+	$(CC) $(incpath) -c $(proj)/ip_ranmap.cpp
+
+ip_ranmsg.o: $(proj)/ip_ranmsg.cpp  $(proj)/hashtbl.h $(proj)/iputil.h
+	$(CC) $(incpath) -c $(proj)/ip_ranmsg.cpp
+

@@ -1,0 +1,18 @@
+1 5
+E 5
+T  
+X
+S? 
+1 6
+T  
+S? 
+Q  
+
+1 5   // Insert 5
+E 5   // Erase 5  
+T     // Traverse
+S?    // CheckBST
+1 6   // Insert 6
+T     // Traverse
+S2    // CheckBST
+Q     // Quit

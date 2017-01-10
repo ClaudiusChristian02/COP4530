@@ -1,0 +1,12 @@
+ 
+-n.100----------------------------------------------
+
+ Input file name: n.100
+            size: 100
+
+           algorithm     comp_count
+           ---------     ----------
+    g_selection_sort           5050
+    g_insertion_sort           2748
+         g_heap_sort           1058
+          List::Sort            567

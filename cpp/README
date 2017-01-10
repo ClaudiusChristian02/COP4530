@@ -1,0 +1,4 @@
+The directory cpp/ contains the non-template fsu:: library utilities
+Version: 6.0
+Refinements and upgrade
+toward Sutter & Alexandrescu http://www.artima.com/cppsource/codestandards.html
